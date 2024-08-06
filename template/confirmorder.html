@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+ <!-- Breadcrumb Start -->
+ <div class="container-fluid">
+	<div class="row px-xl-5">
+		<div class="col-12">
+			<nav class="breadcrumb bg-light mb-30">
+				<a class="breadcrumb-item text-dark" href="/">Home</a>
+				<a class="breadcrumb-item text-dark" href="/orderhistory/">My Orders</a>
+				
+			</nav>
+		</div>
+	</div>
+</div>
+<!-- Breadcrumb End -->
+
+<div class="jumbotron text-muted">
+
+	<div id="invoice" class="">
+		<div class="container mt-4 mb-4">
+			<div class="text-center">
+				<div class="">
+						<span class="h1 text-uppercase text-primary bg-dark px-2">Multi</span>
+						<span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Shop</span>
+				</div>
+			</div>
+
+				<h3 class=""><b>Order Details :</b></h3><hr>
+				<div class=" row mb-4">
+					<div class="col-lg-6 col-md-12 col-sm-12 col-12">
+						<p class="invoice-txt">
+						<b>Order ID :</b> {{order_data.o_id}}</p>
+						<p><b>Order Date :</b> {{order_data.odate.date}}</p>
+						<p><b>Payment System :</b> {{order_data.pay_type}}</p>
+					</div>
+
+					<div class="col-md-12 col-lg-6 col-sm-12 col-12">
+						<p><b>Full Name :</b> {{order_data.name}}</p>
+						<p><b>Contact :</b> {{order_data.phone}}</p>
+						<p><b>Address :</b> {{order_data.address}}</p>
+						<p><b>City :</b> {{order_data.city}}</p>
+						<p><b>Pin Code :</b> {{order_data.zip}}</p>
+						<p><b>State :</b> {{order_data.state}}</p>
+					</div>
+				</div>
+			<hr>
+			</div>
+
+			<div class="container mb-2 mt-2">
+				<div class="row mt-3">
+					<div class="col-2 col-lg-2 col-md-2 col-sm-2 text-center">
+						<b>Iamge</b>
+					</div>
+
+					<div class="col-4 col-lg-4 col-md-4 col-sm-4 text-center">
+						<b>Product Name</b>
+					</div>
+
+					<div class="col-3 col-lg-3 col-md-3 col-sm-3 text-center">
+						<b>Quantity</b>
+					</div>
+
+					<div class="col-3 col-lg-3 col-md-3 col-sm-3 text-center">
+						<b>Price</b>
+					</div>
+				</div><hr>	
+
+				{% for o_item in order_item_data %}
+				
+					<div class="row mt-2">
+						<div class="col-2 col-lg-2 col-md-2 col-sm-2 text-center">
+							<img src="{{o_item.p_id.pimage.url}}" style="width: 40px; height: 40px">
+						</div>
+
+						<div class="col-4 col-lg-4 col-md-4 col-sm-4 text-center">
+							<p><b>{{o_item.p_id.pname}}</b></p>
+						</div>
+
+						<div class="col-3 col-lg-3 col-md-3 col-sm-3 text-center">
+							<p><b>{{o_item.quantity}}</b></p>
+						</div>
+
+						<div class="col-3 col-lg-3 col-md-3 col-sm-3 text-center">
+							<p><b>{{o_item.sub_total}}</b></p>
+						</div>
+					</div>
+				{% endfor %}
+				<hr>
+
+				<div class="row mt-0 mb-4 pt-1" >
+                <div class="col-6 col-lg-6 col-md-6 col-sm-6">
+                    <p><b>Thank you for order</b></p>
+                </div>
+                <div class="col-6 col-lg-6 col-md-6 col-sm-6 text-center">
+                    <p><b>Total Amount: Rs.{{order_data.amount}}/-</b></p>
+                </div>            
+            </div>
+        	<hr>
+		</div>
+	</div>
+
+	<div class="container"> 
+		<div class="row" >
+			<div class="col-12 col-lg-6 col-md-6 col-sm-12 text-center MT-2">
+				<a href="/" class="btn btn-success font-weight-bold" style="border-color: #fff"><i class="fa fa-arrow-left"></i> Continue Shoping</a>
+			</div>
+
+			<div class="col-12 col-lg-6 col-md-6 col-sm-12 text-center">
+				<button class="btn btn-success" style="border-color: #fff" id="download"><i class="fa fa-download"></i> Download Invoice</button>
+			</div> 
+		</div>
+	</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+<script>
+window.onload = function () {
+    document.getElementById("download")
+        .addEventListener("click", () => {
+            const invoice = this.document.getElementById("invoice");
+            console.log(invoice);
+            console.log(window);
+            var opt = {
+                margin: 1,
+                filename: 'MultiShop_bill.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().from(invoice).set(opt).save();
+        })
+}
+</script>
+{% endblock body %}
